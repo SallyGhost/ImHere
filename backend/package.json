@@ -1,0 +1,12 @@
+{
+  "name": "imhere-api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "test:security": "node tests/security.integration.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "4.158.0"
+  }
+}
