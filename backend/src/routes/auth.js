@@ -52,12 +52,12 @@ export default async function authRoute(request, env, url) {
   if (path === "/api/auth/register") {
     if (request.method !== "POST") return methodNotAllowed(["POST"]);
     if (env.ALLOW_STUDENT_REGISTRATION !== "true") {
-      throw new HttpError(403, "Student registration is currently disabled");
+      throw new HttpError(403, "Реєстрацію учнів зараз вимкнено");
     }
     await enforceRateLimit(env.DB, "register-ip", clientIp(request), { limit: 5 });
     const body = await readJsonObject(request);
     if (body.role !== undefined && body.role !== "student") {
-      throw new HttpError(403, "Public registration is limited to students");
+      throw new HttpError(403, "Публічна реєстрація доступна лише учням");
     }
     const email = validEmail(body.email);
     await enforceRateLimit(env.DB, "register-email", email, { limit: 5 });
@@ -90,5 +90,5 @@ export default async function authRoute(request, env, url) {
     return response;
   }
 
-  return jsonResponse({ error: "Not found" }, 404);
+  return jsonResponse({ error: "Ресурс не знайдено" }, 404);
 }

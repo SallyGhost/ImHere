@@ -64,5 +64,5 @@ export default async function groupsRoute(request, env, url) {
     return jsonResponse({ status: "ok" });
   }
 
-  return jsonResponse({ error: "Not found" }, 404);
+  return jsonResponse({ error: "Ресурс не знайдено" }, 404);
 }

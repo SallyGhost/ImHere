@@ -10,8 +10,8 @@ function loadQrCodeLibrary() {
       const script = document.createElement("script");
       script.src = QR_CODE_SCRIPT;
       script.async = true;
-      script.onload = () => window.QRCode ? resolve(window.QRCode) : reject(new Error("QR library did not load"));
-      script.onerror = () => reject(new Error("Could not load the QR image library"));
+      script.onload = () => window.QRCode ? resolve(window.QRCode) : reject(new Error("Не вдалося завантажити бібліотеку QR-кодів"));
+      script.onerror = () => reject(new Error("Не вдалося завантажити бібліотеку QR-кодів"));
       document.head.append(script);
     });
   }

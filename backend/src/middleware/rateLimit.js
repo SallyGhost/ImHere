@@ -27,7 +27,7 @@ export async function enforceRateLimit(db, scope, identity, { limit, periodSecon
     .first();
 
   if (result.request_count > limit) {
-    throw new HttpError(429, "Too many requests; try again later");
+    throw new HttpError(429, "Забагато запитів. Спробуйте трохи пізніше");
   }
 }
 

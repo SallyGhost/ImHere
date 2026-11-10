@@ -37,7 +37,7 @@ export default {
       if (url.pathname === "/health") {
         response = method === "GET"
           ? jsonResponse({ status: "ok" })
-          : jsonResponse({ error: "Method not allowed" }, 405, { allow: "GET" });
+          : jsonResponse({ error: "Цей метод запиту не підтримується" }, 405, { allow: "GET" });
       } else {
         const matchedRoute = routes.find(([prefix]) =>
           url.pathname === prefix || url.pathname.startsWith(`${prefix}/`),
@@ -46,7 +46,7 @@ export default {
         if (matchedRoute) {
           response = await matchedRoute[1](request, env, url);
         } else {
-          response = jsonResponse({ error: "Not found" }, 404);
+          response = jsonResponse({ error: "Ресурс не знайдено" }, 404);
         }
       }
     } catch (error) {
@@ -57,12 +57,12 @@ export default {
       } else {
         const message = String(error?.message ?? error);
         if (/UNIQUE constraint failed/i.test(message)) {
-          response = jsonResponse({ error: "The requested resource already exists" }, 409);
+          response = jsonResponse({ error: "Такий ресурс уже існує" }, 409);
         } else if (/FOREIGN KEY constraint failed/i.test(message)) {
-          response = jsonResponse({ error: "A referenced resource does not exist" }, 400);
+          response = jsonResponse({ error: "Пов’язаний ресурс не існує" }, 400);
         } else {
           console.error("Unhandled API error", error);
-          response = jsonResponse({ error: "Internal server error" }, 500);
+          response = jsonResponse({ error: "Внутрішня помилка сервера" }, 500);
         }
       }
     }

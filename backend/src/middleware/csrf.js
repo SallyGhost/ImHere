@@ -32,6 +32,6 @@ export function requireCsrf(request, env) {
   const cookieToken = readCookies(request)[CSRF_COOKIE];
   const headerToken = request.headers.get("x-csrf-token");
   if (!safeEqual(cookieToken, headerToken)) {
-    throw new HttpError(403, "CSRF validation failed");
+    throw new HttpError(403, "Не вдалося перевірити безпеку запиту");
   }
 }

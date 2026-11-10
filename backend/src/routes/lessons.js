@@ -18,7 +18,7 @@ export default async function lessonsRoute(request, env, url) {
   if (parts.length === 0) {
     if (request.method === "GET") {
       const groupIds = url.searchParams.getAll("groupId");
-      if (groupIds.length > 1) throw new HttpError(400, "groupId may only be specified once");
+      if (groupIds.length > 1) throw new HttpError(400, "Ідентифікатор групи можна вказати лише один раз");
       const groupId = groupIds.length ? requiredString(groupIds[0], "groupId", { min: 1, max: 128 }) : null;
       return jsonResponse({ lessons: await listTeacherLessons(env.DB, teacher.id, groupId) });
     }
@@ -50,5 +50,5 @@ export default async function lessonsRoute(request, env, url) {
     return jsonResponse({ lesson: await closeLesson(env.DB, lessonId, teacher.id) });
   }
 
-  return jsonResponse({ error: "Not found" }, 404);
+  return jsonResponse({ error: "Ресурс не знайдено" }, 404);
 }

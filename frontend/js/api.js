@@ -17,7 +17,7 @@ function apiBaseUrl() {
   if (["localhost", "127.0.0.1"].includes(window.location.hostname)) {
     return "http://localhost:8787";
   }
-  throw new Error("API не настроен: задайте window.IMHERE_API_BASE_URL в frontend/js/config.js");
+  throw new Error("API не налаштовано: задайте window.IMHERE_API_BASE_URL у frontend/js/config.js");
 }
 
 async function getCsrfToken() {

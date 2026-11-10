@@ -22,7 +22,7 @@ export class HttpError extends Error {
 }
 
 export function methodNotAllowed(allowed) {
-  return new Response(JSON.stringify({ error: "Method not allowed" }), {
+  return new Response(JSON.stringify({ error: "Цей метод запиту не підтримується" }), {
     status: 405,
     headers: {
       "content-type": "application/json; charset=utf-8",

@@ -38,7 +38,7 @@ export async function getOwnedGroup(db, groupId, teacherId) {
     .prepare("SELECT id, name, teacher_id, created_at FROM groups WHERE id = ? AND teacher_id = ? LIMIT 1")
     .bind(groupId, teacherId)
     .first();
-  if (!group) throw new HttpError(404, "Group not found");
+  if (!group) throw new HttpError(404, "Групу не знайдено");
   return group;
 }
 
@@ -48,7 +48,7 @@ export async function addStudentToGroup(db, groupId, teacherId, studentId) {
     .prepare("SELECT id FROM users WHERE id = ? AND role = 'student' LIMIT 1")
     .bind(studentId)
     .first();
-  if (!student) throw new HttpError(404, "Student not found");
+  if (!student) throw new HttpError(404, "Учня не знайдено");
 
   await db
     .prepare("INSERT INTO group_members (group_id, student_id) VALUES (?, ?)")
@@ -66,7 +66,7 @@ export async function removeStudentFromGroup(db, groupId, teacherId, studentId) 
     .prepare("DELETE FROM group_members WHERE group_id = ? AND student_id = ?")
     .bind(groupId, studentId)
     .run();
-  if (result.meta.changes === 0) throw new HttpError(404, "Student is not a member of this group");
+  if (result.meta.changes === 0) throw new HttpError(404, "Учень не входить до цієї групи");
 }
 
 export async function listGroupMembers(db, groupId, teacherId) {

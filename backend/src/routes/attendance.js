@@ -21,13 +21,13 @@ export default async function attendanceRoute(request, env, url) {
       return jsonResponse({ attendance: await listStudentHistory(env.DB, user.id) });
     }
     if (user.role !== "teacher") {
-      throw new HttpError(403, "You do not have permission to view attendance history");
+      throw new HttpError(403, "У вас немає дозволу переглядати історію відвідувань");
     }
 
     const groupIds = url.searchParams.getAll("groupId");
     const studentIds = url.searchParams.getAll("studentId");
     if (groupIds.length > 1 || studentIds.length > 1) {
-      throw new HttpError(400, "Each filter may only be specified once");
+      throw new HttpError(400, "Кожен фільтр можна вказати лише один раз");
     }
     const groupId = groupIds.length ? decodePathSegment(groupIds[0], "group id") : null;
     const studentId = studentIds.length ? decodePathSegment(studentIds[0], "student id") : null;
@@ -35,7 +35,7 @@ export default async function attendanceRoute(request, env, url) {
     return jsonResponse({ attendance: await listTeacherHistory(env.DB, user.id, { groupId, studentId }) });
   }
 
-  if (path !== "/api/attendance/qr") return jsonResponse({ error: "Not found" }, 404);
+  if (path !== "/api/attendance/qr") return jsonResponse({ error: "Ресурс не знайдено" }, 404);
   if (request.method !== "POST") return methodNotAllowed(["POST"]);
 
   const student = requireRole(await requireAuthentication(request, env), "student");
@@ -47,7 +47,7 @@ export default async function attendanceRoute(request, env, url) {
   if (result.duplicate) {
     return jsonResponse({
       success: false,
-      error: { code: "ALREADY_ATTENDED", message: "Attendance already recorded" },
+      error: { code: "ALREADY_ATTENDED", message: "Відвідування вже зафіксовано" },
     }, 409);
   }
   return jsonResponse({ success: true, attendance: result.attendance }, 201);

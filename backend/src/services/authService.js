@@ -111,10 +111,10 @@ export async function login(db, email, password, ttlSeconds, pepper) {
   if (!user) {
     const material = await passwordMaterial(password, pepper);
     await derivePasswordHash(material, DUMMY_SALT, PBKDF2_ITERATIONS);
-    throw new HttpError(401, "Invalid email or password");
+    throw new HttpError(401, "Неправильна електронна пошта або пароль");
   }
   if (!(await verifyPassword(password, user.password_hash, pepper))) {
-    throw new HttpError(401, "Invalid email or password");
+    throw new HttpError(401, "Неправильна електронна пошта або пароль");
   }
 
   const session = await createSession(db, user.id, ttlSeconds);
@@ -126,7 +126,7 @@ export async function login(db, email, password, ttlSeconds, pepper) {
 
 export async function register(db, email, password, ttlSeconds, pepper) {
   const existing = await db.prepare("SELECT id FROM users WHERE email = ? LIMIT 1").bind(email).first();
-  if (existing) throw new HttpError(409, "Email is already registered");
+  if (existing) throw new HttpError(409, "Цю адресу електронної пошти вже зареєстровано");
 
   const id = crypto.randomUUID();
   const passwordHash = await hashPassword(password, pepper);
@@ -137,7 +137,7 @@ export async function register(db, email, password, ttlSeconds, pepper) {
       .run();
   } catch (error) {
     if (/UNIQUE constraint failed/i.test(String(error?.message ?? error))) {
-      throw new HttpError(409, "Email is already registered");
+      throw new HttpError(409, "Цю адресу електронної пошти вже зареєстровано");
     }
     throw error;
   }

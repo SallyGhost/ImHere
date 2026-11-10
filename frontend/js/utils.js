@@ -7,7 +7,7 @@ export function escapeHtml(value = "") {
 export function formatDate(value) {
   if (!value) return "—";
   const date = new Date(value.includes("Z") ? value : `${value.replace(" ", "T")}Z`);
-  return Number.isNaN(date.getTime()) ? value : new Intl.DateTimeFormat("ru-RU", {
+  return Number.isNaN(date.getTime()) ? value : new Intl.DateTimeFormat("uk-UA", {
     dateStyle: "medium", timeStyle: "short",
   }).format(date);
 }
@@ -24,15 +24,16 @@ export function showNotice(target, message, type = "error") {
 }
 
 export function apiErrorMessage(error) {
-  if (error?.code === "ALREADY_ATTENDED") return "Посещение этого занятия уже сохранено.";
-  if (error?.code === "NOT_GROUP_MEMBER") return "Ваш аккаунт не добавлен в эту группу.";
-  if (error?.code === "LESSON_NOT_ACTIVE") return "Занятие уже завершено или ещё не началось.";
-  if (error?.status === 401) return "Сессия завершилась. Войдите в аккаунт ещё раз.";
-  if (error?.status === 429) return "Слишком много запросов. Подождите немного и повторите.";
-  return error?.message || "Не удалось выполнить запрос. Попробуйте ещё раз.";
+  if (error?.code === "ALREADY_ATTENDED") return "Відвідування цього заняття вже збережено.";
+  if (error?.code === "NOT_GROUP_MEMBER") return "Вас ще не додано до цієї групи.";
+  if (error?.code === "LESSON_NOT_ACTIVE") return "Заняття ще не почалося або вже завершилося.";
+  if (error?.status === 401) return "Сеанс завершився. Увійдіть до облікового запису ще раз.";
+  if (error?.status === 429) return "Забагато запитів. Зачекайте трохи й повторіть спробу.";
+  if (/[іїєґ]/i.test(error?.message || "")) return error.message;
+  return "Не вдалося виконати запит. Перевірте з’єднання та спробуйте ще раз.";
 }
 
-export function setBusy(button, busy, label = "Загрузка…") {
+export function setBusy(button, busy, label = "Завантаження…") {
   if (!button) return;
   if (busy) {
     button.dataset.originalLabel = button.textContent;

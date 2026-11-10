@@ -7,7 +7,7 @@ export function initAuthPage(page) {
   form?.addEventListener("submit", async (event) => {
     event.preventDefault();
     const button = form.querySelector("button[type=submit]");
-    setBusy(button, true, page === "login" ? "Входим…" : "Создаём аккаунт…");
+    setBusy(button, true, page === "login" ? "Вхід…" : "Створюємо обліковий запис…");
     message.hidden = true;
     const data = new FormData(form);
     try {

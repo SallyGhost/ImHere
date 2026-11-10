@@ -51,16 +51,16 @@ export async function recordQrAttendance(db, lessonId, studentId) {
     .prepare("SELECT id, group_id, status FROM lessons WHERE id = ? LIMIT 1")
     .bind(lessonId)
     .first();
-  if (!lesson) throw new HttpError(404, "Lesson not found", "LESSON_NOT_FOUND");
+  if (!lesson) throw new HttpError(404, "Заняття не знайдено", "LESSON_NOT_FOUND");
   if (lesson.status !== "active") {
-    throw new HttpError(409, "Lesson is not active", "LESSON_NOT_ACTIVE");
+    throw new HttpError(409, "Заняття не триває", "LESSON_NOT_ACTIVE");
   }
 
   const membership = await db
     .prepare("SELECT 1 AS member FROM group_members WHERE group_id = ? AND student_id = ? LIMIT 1")
     .bind(lesson.group_id, studentId)
     .first();
-  if (!membership) throw new HttpError(403, "Student is not a member of this group", "NOT_GROUP_MEMBER");
+  if (!membership) throw new HttpError(403, "Учень не входить до цієї групи", "NOT_GROUP_MEMBER");
 
   const result = await db
     .prepare(`

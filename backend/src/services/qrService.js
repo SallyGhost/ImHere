@@ -50,7 +50,7 @@ export async function verifyQrToken(env, rawToken, now = Date.now()) {
     try {
       token = JSON.parse(token);
     } catch {
-      throw new HttpError(400, "QR token is not valid JSON", "INVALID_QR");
+      throw new HttpError(400, "Вміст QR-коду не є коректним JSON", "INVALID_QR");
     }
   }
   if (
@@ -60,21 +60,21 @@ export async function verifyQrToken(env, rawToken, now = Date.now()) {
     token.lessonId.length < 1 || token.lessonId.length > 128 ||
     !Number.isSafeInteger(token.timeSlot) || typeof token.signature !== "string"
   ) {
-    throw new HttpError(400, "QR token has an invalid format", "INVALID_QR");
+    throw new HttpError(400, "QR-токен має неправильний формат", "INVALID_QR");
   }
 
   const signature = decodeHex(token.signature);
-  if (!signature) throw new HttpError(400, "QR token has an invalid signature format", "INVALID_QR");
+  if (!signature) throw new HttpError(400, "Підпис QR-токена має неправильний формат", "INVALID_QR");
 
   const key = await hmacKey(env.QR_SECRET);
   const message = new TextEncoder().encode(signatureMessage(token.lessonId, token.timeSlot));
   if (!(await crypto.subtle.verify("HMAC", key, signature, message))) {
-    throw new HttpError(401, "QR signature is invalid", "INVALID_QR_SIGNATURE");
+    throw new HttpError(401, "Підпис QR-коду недійсний", "INVALID_QR_SIGNATURE");
   }
 
   const currentSlot = Math.floor(now / (qrWindowSeconds(env) * 1000));
   if (token.timeSlot !== currentSlot) {
-    throw new HttpError(410, "QR token has expired", "QR_EXPIRED");
+    throw new HttpError(410, "Строк дії QR-токена завершився", "QR_EXPIRED");
   }
   return token;
 }

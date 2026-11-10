@@ -26,6 +26,6 @@ export async function findSessionUser(request, db) {
 
 export async function requireAuthentication(request, env) {
   const user = await findSessionUser(request, env.DB);
-  if (!user) throw new HttpError(401, "Authentication required");
+  if (!user) throw new HttpError(401, "Потрібно увійти до облікового запису");
   return user;
 }

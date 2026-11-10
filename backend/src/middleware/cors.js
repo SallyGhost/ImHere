@@ -12,10 +12,10 @@ export function allowedOrigins(env) {
 export function validateOrigin(request, env, { required = false } = {}) {
   const origin = request.headers.get("origin");
   if (!origin) {
-    if (required) throw new HttpError(403, "Origin header is required");
+    if (required) throw new HttpError(403, "У запиті не вказано джерело сторінки");
     return null;
   }
-  if (!allowedOrigins(env).has(origin)) throw new HttpError(403, "Origin is not allowed");
+  if (!allowedOrigins(env).has(origin)) throw new HttpError(403, "Запити з цього джерела заборонені");
   return origin;
 }
 

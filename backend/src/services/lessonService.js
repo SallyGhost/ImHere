@@ -1,6 +1,8 @@
 import { HttpError } from "../utils/http.js";
 import { getOwnedGroup } from "./groupService.js";
 
+const statusLabel = { planned: "запланованим", active: "активним", closed: "завершеним" };
+
 export async function createLesson(db, teacherId, groupId, title) {
   await getOwnedGroup(db, groupId, teacherId);
   const id = crypto.randomUUID();
@@ -45,14 +47,14 @@ export async function getOwnedLesson(db, lessonId, teacherId) {
     `)
     .bind(lessonId, teacherId, teacherId)
     .first();
-  if (!lesson) throw new HttpError(404, "Lesson not found");
+  if (!lesson) throw new HttpError(404, "Заняття не знайдено");
   return lesson;
 }
 
 export async function startLesson(db, lessonId, teacherId) {
   const lesson = await getOwnedLesson(db, lessonId, teacherId);
   if (lesson.status !== "planned") {
-    throw new HttpError(409, `Cannot start a lesson with status '${lesson.status}'`);
+    throw new HttpError(409, `Неможливо розпочати заняття зі статусом «${statusLabel[lesson.status] ?? "невідомим"}»`);
   }
 
   const result = await db
@@ -63,14 +65,14 @@ export async function startLesson(db, lessonId, teacherId) {
     `)
     .bind(lessonId, teacherId)
     .run();
-  if (result.meta.changes !== 1) throw new HttpError(409, "Lesson state changed; reload and try again");
+  if (result.meta.changes !== 1) throw new HttpError(409, "Стан заняття змінився. Оновіть сторінку та спробуйте ще раз");
   return getOwnedLesson(db, lessonId, teacherId);
 }
 
 export async function closeLesson(db, lessonId, teacherId) {
   const lesson = await getOwnedLesson(db, lessonId, teacherId);
   if (lesson.status !== "active") {
-    throw new HttpError(409, `Cannot close a lesson with status '${lesson.status}'`);
+    throw new HttpError(409, `Неможливо завершити заняття зі статусом «${statusLabel[lesson.status] ?? "невідомим"}»`);
   }
 
   const result = await db
@@ -81,6 +83,6 @@ export async function closeLesson(db, lessonId, teacherId) {
     `)
     .bind(lessonId, teacherId)
     .run();
-  if (result.meta.changes !== 1) throw new HttpError(409, "Lesson state changed; reload and try again");
+  if (result.meta.changes !== 1) throw new HttpError(409, "Стан заняття змінився. Оновіть сторінку та спробуйте ще раз");
   return getOwnedLesson(db, lessonId, teacherId);
 }

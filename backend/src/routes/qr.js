@@ -9,7 +9,7 @@ import { HttpError, jsonResponse, methodNotAllowed } from "../utils/http.js";
 export default async function qrRoute(request, env, url) {
   const path = url.pathname.replace(/\/+$/, "") || "/";
   const match = path.match(/^\/api\/qr\/lessons\/([^/]+)\/token$/);
-  if (!match) return jsonResponse({ error: "Not found" }, 404);
+  if (!match) return jsonResponse({ error: "Ресурс не знайдено" }, 404);
   if (request.method !== "GET") return methodNotAllowed(["GET"]);
 
   const teacher = requireRole(await requireAuthentication(request, env), "teacher");
@@ -17,7 +17,7 @@ export default async function qrRoute(request, env, url) {
   const lessonId = decodePathSegment(match[1], "lesson id");
   const lesson = await getOwnedLesson(env.DB, lessonId, teacher.id);
   if (lesson.status !== "active") {
-    throw new HttpError(409, "QR tokens are available only while the lesson is active", "LESSON_NOT_ACTIVE");
+    throw new HttpError(409, "QR-коди доступні лише під час заняття", "LESSON_NOT_ACTIVE");
   }
 
   const response = jsonResponse(await createQrToken(env, lessonId));
