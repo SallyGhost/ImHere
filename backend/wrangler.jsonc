@@ -1,0 +1,27 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "imhere-api",
+	"main": "src/index.js",
+	"compatibility_date": "2026-11-09",
+	"observability": {
+		"enabled": true
+	},
+	"triggers": {
+		"crons": ["17 3 * * *"]
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "imhere-db",
+			"database_id": "09c258af-07aa-4e64-b52a-1e042be1da12",
+			"migrations_dir": "migrations"
+		}
+	],
+	"vars": {
+		"APP_TIME_ZONE": "Europe/Kyiv",
+		"QR_TOKEN_TTL_SECONDS": "25",
+		"SESSION_TTL_SECONDS": "86400",
+		"ALLOW_STUDENT_REGISTRATION": "true",
+		"ALLOWED_ORIGINS": "http://localhost:5500,http://127.0.0.1:5500,http://localhost:5173,http://127.0.0.1:5173,https://sallyghost.github.io"
+	}
+}

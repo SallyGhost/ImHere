@@ -1,0 +1,14 @@
+{
+  "name": "imhere-api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "create:local-teacher": "node create-local-teacher.mjs",
+    "create:local-admin": "node create-local-admin.mjs",
+    "test:security": "node tests/security.integration.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "4.158.0"
+  }
+}
